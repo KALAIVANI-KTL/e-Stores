@@ -1,0 +1,1152 @@
+#include<iostream>
+#include<fstream>
+#include <ctime>
+#include<iomanip>
+#include<string.h>
+#include<stdlib.h>
+# include <process.h>
+#define maxsize 50
+
+using namespace std;
+
+string month[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+string day[]   = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+
+fstream xfile    ("product.txt");
+fstream yfile    ("customer.txt");
+fstream zfile    ("dailysale.txt");
+fstream outfile  ("employee details.txt");
+fstream infile   ("attendance.txt");
+fstream datafile ("salary.txt");
+fstream files    ("product_details.tmp.txt");
+fstream DSfile   ("shipping details.txt");
+
+template<class T>
+class feedback
+{
+    public:
+    T f;
+    feedback(T f1)
+    {
+        f=f1;
+    }
+    void feedback_ratings()
+    {
+        if(f==1||f=='a')
+            cout<<"YOUR RARING IS:: *\n\n"<<endl;
+        else if(f==2||f=='b')
+            cout<<"YOUR RARING IS:: **\n\n"<<endl;
+        else if(f==3||f=='c')
+            cout<<"YOUR RARING IS:: ***\n\n"<<endl;
+        else if(f==4||f=='d')
+            cout<<"YOUR RARING IS:: ****\n\n"<<endl;
+        else if(f==5||f=='e')
+            cout<<"YOUR RARING IS:: *****\n\n"<<endl;
+    }
+};
+
+class product
+{
+   public:
+    string item_name [20] = {"boost","horlics","lays","kurkure","cake","soap","powder","bingo","harpic","complan","hamam","colgate","perfume","bru","3roses","rice","wheat","oil","biscuit","surfexcel"};
+    int    item_id   [20] = {123,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140};
+    float  unit_price[20]= {125.75,200.45,030.35,025.56,100.75,035.35,150.15,22.55,78.55,220.95,45.35,90.43,300.34,200.45,130.35,200.44,097.88,123.43,011.45,135.90};
+
+    void display();
+    void assigns()
+    {
+        for(int r=0;r<20;r++)
+        {
+        xfile << setw(4) << item_id[r] << "\t\t" << unit_price[r] <<"\t\t" << item_name[r] << "  " ;
+        xfile << endl;
+        }
+
+    }
+};
+
+ void product :: display()
+{
+
+
+    char data[1000];
+    ifstream xfile;
+    xfile.open("product.txt");
+
+        cout << "\t\t    ALL THE PRODUCTS IN THE STOCK " << endl ;
+        cout << "\t\t    ----------------------------- " << endl << endl << endl;
+
+
+    cout<<"\n-----------------------------------------------\n";
+    cout << "Product ID\tUnit Price\tProduct Name\n";
+    cout<<"-----------------------------------------------\n";
+
+    while(!xfile.eof())
+    {
+        xfile.getline(data,1000);
+        cout << data << endl;
+    }
+    xfile.close();
+    cout<<"-----------------------------------------------\n";
+}
+
+
+class customer
+{
+    protected:
+        string name[10] ={"kumar","kannan","aswin","vijay","kesav","ramya","vidhya","salai","shalakiya","krishnan"};
+        int    id  [10] ={1001,1002,1003,1004,1005,1006,1007,1008,1009,1010};
+
+    public:
+        void show()
+        {
+            for(int s=0;s<10;s++)
+            {
+                yfile << setw(4) <<"\t\t" << id[s] << "\t\t" << name[s] << " "  ;
+                yfile << endl;
+            }
+        }
+        void details()
+        {
+
+            char data[1000];
+            ifstream yfile;
+            yfile.open("customer.txt");
+
+
+            cout << "\n\t   Customer Details who have account in store website" << endl;
+            cout << "\t   --------------------------------------------------" << endl << endl ;
+
+            cout <<"               Customer ID      Customer Name\n  ";
+            cout <<"             -------------------------------\n";
+
+
+            while(!yfile.eof())
+            {
+                yfile.getline(data,1000);
+                cout << data << endl;
+            }
+            yfile.close();
+            cout<<"              --------------------------------\n";
+        }
+};
+
+class order : public product, public customer
+{
+    protected:
+        int cus_id;
+        char c[15],d[15];
+        string p_name;
+        int quan;
+        float amount;
+        float total = 0;
+        int p_id;
+
+
+    public:
+        void order_products()
+        {
+             int i;
+             char ch;
+             int flag;
+             int choice;
+             int cho;
+
+
+            cout << "\n\nEnter the Customer ID :  ";
+            cin >> cus_id;
+
+
+            flag = 0;
+            for (i=0; i<10; i++)
+            {
+                if(id[i] == cus_id)
+                {
+                    strcpy (c,"LOGIN CREATED");
+                    cout << endl;
+                    cout << "Customer Name is  " << name[i] << endl;
+                    flag = 1;
+                    break;
+                }
+            }
+
+            if(flag == 1)
+            {
+                cout << c << endl << endl;
+                cout << "Customer has a account." << endl ;
+                cout << "So he/she allowed to order the products..." << endl << endl;
+
+                cout << "Order the products that you want to buy..." << endl << endl;
+
+                display();
+
+
+                cout << "Order the Products by giving..." << endl << endl;
+                cout << "\t\t\t1.Product Name\n\t\t\t2.Product ID" << endl << endl;
+
+                cout << "Enter the choice : ";
+                cin >> cho;
+
+                switch(cho)
+                {
+                    case 1:
+                         do
+                        {
+                            cout << endl;
+                            cout << "Enter the Product Name : ";
+                            cin >> p_name;
+                            cout << endl;
+
+                            flag = 0;
+                            for (i=0; i<20; i++)
+                            {
+                                if(item_name[i] == p_name)
+                                {
+                                    flag = 1;
+                                    break;
+                                }
+                            }
+                            if (flag == 1)
+                            {
+                                cout << "The Product available..." << endl << endl;
+                                cout << "Product Name : " << item_name[i] << endl ;
+                                cout << "Product ID   : " << item_id [i] << endl;
+                                cout << "Unit Price   : " << unit_price[i] << endl;
+
+
+                                cout << "\nEnter the quantity of product that you want to buy : ";
+                                cin >> quan;
+
+
+                                amount = unit_price[i] * quan;
+                                total  = total + amount;
+
+                                cout << "\n\nAmount = " << amount << endl;
+                                cout << "Total  = " << total << endl;
+
+                            }
+                            else
+                            {
+                                cout << "The product is not available..." << endl << endl;
+                            }
+
+                            cout << "================================================================";
+                            cout << "\n\nDo you want to continue ?  ";
+                            cin >> ch;
+                    } while (ch == 'Y' || ch == 'y');
+
+                    cout << "\n\n\nTOTAL AMOUNT FOR THIS BILL : " << total;
+                    option();
+                    break;
+
+                    case 2:
+                         do
+                        {
+                            cout << endl;
+                            cout << "Enter the Product ID : ";
+                            cin >> p_id;
+                            cout << endl;
+
+                            flag = 0;
+                            for (i=0; i<20; i++)
+                            {
+                                if(item_id[i] == p_id)
+                                {
+                                    flag = 1;
+                                    break;
+                                }
+                            }
+                            if (flag == 1)
+                            {
+                                cout << "The Product is present in the stock..." << endl << endl;
+                                cout << "Product Name : " << item_name[i] << endl ;
+                                cout << "Product ID   : " << item_id [i] << endl;
+                                cout << "Unit Price   : " << unit_price[i] << endl;
+
+
+                                cout << "\nEnter the quantity of product that you want to buy : ";
+                                cin >> quan;
+
+
+                                amount = unit_price[i] * quan;
+                                total  = total + amount;
+
+                                cout << "\n\nAmount = " << amount << endl;
+                                cout << "Total  = " << total << endl;
+                            }
+                            else
+                            {
+                                cout << "The product is not present in the stock..." << endl << endl;
+                            }
+
+                            cout << "================================================================";
+                            cout << "\n\nDo you want to continue ?  ";
+                            cin >> ch;
+                        } while (ch == 'Y' || ch == 'y');
+
+                        cout << "\n\n\nTOTAL AMOUNT FOR THIS BILL : " << total;
+                        option();
+                        break;
+
+                        default:
+                            cout << "PLEASE CHECK THE CHOICE !!!" << endl << endl;
+                            break;
+                }
+
+            }
+            else
+            {
+                cout << endl;
+                cout << " Create a account and login to order the products and buy !!!" << endl << endl;
+            }
+        }
+
+         void option()
+         {
+            int choice;
+            cout << "\n \n\t\t\tClick 1 to confirm order\n\t\t\tClick 2 to cancellation the order\n" ;
+
+            cout << "\n\nPress your Desicision : ";
+            cin >> choice;
+
+            switch(choice)
+            {
+                case 1:
+                    {
+                        fstream zfile("dailysale.txt" ,ios::out | ios::app );
+                        zfile << setw(4) << cus_id <<"\t\t" << "Rs."<<total <<" ";
+                        zfile << endl;
+                    }
+                    cout << "CONFIRM ORDER\n\n";
+                    cout << "The order is confirmed. Goods were delivered soon...\n";
+                    cout << "THANKYOU VISIT AGAIN\n\n ";
+                    break;
+
+                case 2:
+                    cout << "CANCELLATION ORDER\n\n";
+                    break;
+            }
+         }
+    void disp()
+    {
+        cout << "     --------------------------------------------------" << endl << endl ;
+        cout <<"                 Customer ID        Total amount purchased \n  ";
+        cout <<"      --------------------------------------------------\n";
+          char data[1000];
+          ifstream zfile   ;
+          zfile.open("dailysale.txt");
+
+          while(!zfile.eof())
+          {
+              zfile.getline(data,1000);
+              cout<<"\t\t\t"<<data<<endl;
+          }
+          zfile.close();
+    }
+};
+
+class IDEAL
+{
+ public:
+        void start(char *s="\t\t\t\tWELCOME\n")
+        {
+        cout<<s;
+        }
+        virtual void disp()
+        {
+        cout<<"\n_________________________________________________________\n";
+        }
+};
+
+
+class EMPLOYEE:public IDEAL
+{
+    public:
+    int    i[15]={1 ,2 ,3 ,4 ,5 ,6 ,7 ,8 ,9 ,10 ,11 ,12 ,13 ,14 ,15};
+    string c[15]={"kalai    ","meena    ","lakshmi  ","virat    ","karthick ","bala     ","ram      ","arjun    ","surya    ","barath   ","babi     ","vignesh  ","mani     ","krishna  ","john     "};
+    string s[15]={"MarketingAdmin","SalesManager","WarehouseManager","DeliveryBoy","DeliveryBoy","DeliveryBoy","DeliveryBoy","DeliveryBoy","DeliveryBoy","DeliveryBoy","DeliveryBoy","DeliveryBoy","DeliveryBoy","DeliveryBoy","DeliveryBoy"};
+    char   p[15]={'N','N','N','N','N','N','N','N','N','N','N','N','N','N','N'};
+    char   P[15]={'Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y'};
+    long   a[15]={'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'};
+
+    void getdetails()
+    {
+
+        for(int row=0;row<15;row++)
+        {
+            outfile<<setw(4)<<i[row]<<"\t\t"<<c[row]<<"   "<<s[row]<<" ";
+            outfile<<endl;
+        }
+    }
+
+    void disp()
+    {
+        char data[1000];
+        ifstream outfile   ;
+        outfile.open("employee details.txt");
+        cout <<"     ---------------------------------------------------------" << endl << endl ;
+        cout <<"                 EMPLOYEE ID      NAME          DESIGNATION \n  ";
+        cout <<"     ----------------------------------------------------------\n";
+        while(!outfile.eof())
+        {
+            outfile.getline(data,1000);
+            cout<<"\t\t"<<data<<endl;
+        }
+        outfile.close();
+        cout <<"     ---------------------------------------------------------" << endl << endl ;
+    }
+
+    void attendance()
+    {
+        int id,flag=0;
+        cout<<"\n Please Enter Your ID ::";
+        cin>>id;
+        for(int row=0;row<15;row++)
+        {
+            if ( id ==i[row] )
+            {
+                flag = 1;
+                p[row]=P[row];
+                break;
+            }
+        }
+        if (flag)
+        {
+            cout<<"\n YOUR ATTENDANCE IS REGISTERED SUCCESSFULLY\n";
+            {
+                time_t timer;
+                tm * time;
+                const int BASE_YEAR = 1900;
+                std::time(&timer);
+                time = localtime(&timer);
+                cout << "\n  At Current date " << day[time->tm_wday] << " "
+                            << month[time->tm_mon] << " " << time->tm_mday
+                            << " " << (time->tm_year + BASE_YEAR);
+                cout << "\n  At Current time " << setw(2) << setfill('0')
+                            << time->tm_hour << " : " << setw(2) << setfill('0')
+                            << time->tm_min << " : " << setw(2) << setfill('0')
+                            << time->tm_sec;
+            }
+            cout<<endl<<endl;
+            fstream infile("attendance.txt",ios::out );
+            for(int row=0;row<15;row++)
+            {
+                infile<<setw(4)<<i[row]<<"\t\t"<<c[row]<<"   "<<p[row]<<" ";
+                infile<<endl;
+            }
+        }
+        else
+        cout<<"\n Please check you ID...Try Again later....\n\n";
+    }
+
+    void disp_attendance()
+    {
+        char data[1000];
+        ifstream infile ;
+        infile.open("attendance.txt");
+        cout <<"     ---------------------------------------------------------" << endl << endl ;
+        cout <<"                 EMPLOYEE ID      NAME       ATTENDANCE \n  ";
+        cout <<"     ----------------------------------------------------------\n";
+        while(!infile.eof())
+        {
+            infile.getline(data,1000);
+            cout<<"\t\t"<<data<<endl;
+        }
+        infile.close();
+        cout <<"     ---------------------------------------------------------" << endl << endl ;
+    }
+
+    void salary()
+    {
+        long BasicSalary,TA=1000,DA=1000,HRA=500;
+        fstream infile("salary.txt",ios::out );
+        cout<<"\n Enter the Basic Salary ::Rs.";
+        cin>>BasicSalary;
+        for(int row=0;row<15;row++)
+        {
+            if (s[row]=="MarketingAdmin")
+            {a[row] = TA+DA+HRA+(6*BasicSalary);}
+            else if (s[row]=="WarehouseManager")
+            {a[row] = TA+DA+HRA+(5*BasicSalary);}
+            else if (s[row]=="SalesManager")
+            {a[row] = TA+DA+HRA+(4*BasicSalary);}
+            else if (s[row]=="DeliveryBoy")
+            {a[row] = TA+DA+HRA+(3*BasicSalary);}
+            datafile<<setw(4)<<i[row]<<"\t\t"<<c[row]<<"    "<<s[row]<<"\t"<<"Rs."<<a[row];
+            datafile<<endl;
+        }
+
+        char data[1000];
+        ifstream datafile   ;
+        datafile.open("salary.txt");
+        cout <<"     ---------------------------------------------------------------------" << endl << endl ;
+        cout <<"                 EMPLOYEE ID      NAME       DESIGNATION          SALARY \n  ";
+        cout <<"     ---------------------------------------------------------------------\n";
+        while(!datafile.eof())
+        {
+            datafile.getline(data,1000);
+            cout<<"\t\t"<<data<<endl;
+        }
+        datafile.close();
+        cout <<"     ---------------------------------------------------------" << endl << endl ;
+    }
+
+    void Search(int id)
+    {
+        int flag=0;
+        for(int row=0;row<15;row++)
+        {
+            if ( id ==i[row] )
+            {
+                flag = 1;
+                cout<<"\n MATCH FOUND \n\n";
+                cout<<endl<<"\t"<<i[row]<<"\t"<<c[row]<<"\t"<<s[row]<<endl;
+                break;
+            }
+        }
+        if (!flag)
+                cout<<"\n No matches for your Search.....\n";
+    }
+
+    void Search(string designation)
+    {
+            int flag=0;
+            cout <<"     ---------------------------------------------------------" << endl << endl ;
+            cout <<"                 EMPLOYEE ID      NAME          DESIGNATION \n  ";
+            cout <<"     ----------------------------------------------------------\n";
+            for(int row=0;row<15;row++)
+            {
+                if ( designation == s[row] )
+                {
+                flag = 1;
+                cout<<endl<<"\t\t"<<i[row]<<"\t\t"<<c[row]<<"\t"<<s[row]<<endl;
+                }
+            }
+            cout <<"     ----------------------------------------------------------\n";
+            if (!flag)
+                cout<<"\n No matches for your Search.....\n";
+    }
+
+};
+
+class shipping
+{
+    public:
+    int pc[maxsize];
+    int rear = -1;
+    int Front = -1;
+    int isempty()
+    {
+
+        if(Front==maxsize-1)
+        {
+            return 0;
+        }
+        else
+        {
+            return 1;
+        }
+    }
+    int isfull()
+    {
+        if(rear==maxsize-1)
+        {
+            return 0;
+        }
+        else
+        {
+            return 1;
+        }
+    }
+
+    int enqueue(int cus_id)
+    {
+        rear = rear +1;
+        pc[rear] = cus_id;
+        dequeue();
+
+    }
+    void dequeue()
+    {
+        int cus_id;
+        static int e_ID=4;
+        Front = Front+1;
+        cus_id = pc[Front];
+        cout<<"\n Customer ID is "<<cus_id<<"  and delivered by Employee ID\t"<<e_ID;
+        e_ID++;
+        if (e_ID==15)
+            e_ID=4;
+
+                    {
+                        fstream DSfile("shipping details.txt" ,ios::out | ios::app );
+                        DSfile << setw(4) << cus_id <<"\t\t" <<e_ID<<" ";
+                        DSfile << endl;
+                    }
+    }
+
+void FUNCTION()
+{
+    int i;
+    int choice, data,v;
+    cout<<"\n\n\n1.Empty\n2.Full\n3.Enqueue - customer ID\n4.Exit\n";
+
+    do
+    {
+        cout<<"\nEnter your choice::";
+        cin>>choice;
+
+        switch(choice)
+        {
+
+            case 1:
+                cout<<"\n clicked for checking shipping details box is empty\n";
+                if(isempty()==0)
+                {
+                    cout<<"\n shipping details box is not empty fill it\n";
+                }
+                else
+                {
+                    cout<<"\n shipping details box is empty\n";
+                }
+                break;
+            case 2:
+                cout<<"\n clicked for checking shipping details box is full\n";
+                if(isfull()==1)
+                {
+                    cout<<"\n shipping details box is not full ...\n";
+                }
+                else
+                {
+                    cout<<"\n shipping details box is full wait for sometime\n";
+                }
+                break;
+            case 3:
+
+                cout<<"\n clicked for inserting CUSTOMER ID  in shipping details box\n";
+                if(isfull()==1)
+                {
+                cout<<"\n  Please Enter the Customer ID::";
+                        cin>>data;
+                        enqueue(data);
+                    }
+                    else if(isfull()==0)
+                    {
+                    cout<<"\n shipping details box is filled try again later";
+                    }
+                break;
+            case 4:
+
+                {
+                    cout << "     --------------------------------------------------" << endl << endl ;
+                    cout <<"                 Customer ID           Employee ID \n  ";
+                    cout <<"      --------------------------------------------------\n";
+                        char data[1000];
+                        ifstream DSfile   ;
+                        DSfile.open("shipping details.txt");
+
+                        while(!DSfile.eof())
+                        {
+                            DSfile.getline(data,1000);
+                            cout<<"\t\t\t"<<data<<endl;
+                        }
+                        DSfile.close();
+                }
+            }
+        }while(choice!=4);
+    }
+};
+
+class details
+{
+   protected:
+      char  p_name[20];
+      int   p_id;
+      float u_qty;
+      float u_price;
+      int   p_stock;
+
+   public:
+
+       void getdata ()
+       {
+          cout << "NAME       : ";
+          cin >> p_name;
+
+          cout << "Id         : ";
+          cin >> p_id;
+
+          cout << "unit price : ";
+          cin >> u_price;
+
+          cout << "unit qty   : ";
+          cin >> u_qty;
+
+          cout << "stock      : ";
+          cin >> p_stock;
+       }
+
+      char d[100];
+       inline void putdata ()
+        {
+            cout << p_name <<"\t\t" << p_id <<"\t\t" <<  u_qty <<"\t\t" << u_price <<"\t\t" << p_stock << endl;
+        }
+
+        // MODIFY FUNCTION : FUNCTION OVERLOADING
+        // ONE FN FOR COMPARING THE INTEGER VALUES AND ANOTHER ONE FOR COMPARING THE CHAR ARRAY VALUES
+
+        int modify (char n[])
+        {
+           if (strcmp (n, p_name) == 0)
+           {
+              int flag = 1;
+              return flag;
+           }
+           return 0;
+        }
+
+         int modify (int i)
+        {
+           if ( p_id == i)
+           {
+              int flag = 1;
+              return flag;
+           }
+           return 0;
+        }
+
+        //DEFAULT ARGUMENT -  FUNCTION DECLARATION
+        inline void design (char * = "*");
+};
+// DEFAULT ARGUMENTS - FUNCTION DEFINITION
+void details :: design (char d[])
+{
+   cout << d;
+}
+int main()
+{
+        //DEFAULT ARGUMENTS
+        IDEAL obj;
+        obj.start();
+        obj.start("\n\t\t\t  DEPARTMENTAL STORES\n\n\n");
+        order o;
+
+        o.assigns();
+        o.show();
+
+        EMPLOYEE e;
+        shipping s;
+        e.getdetails();
+
+        details d;
+
+        char option;
+        int  choice;
+        int ch1;
+
+
+
+        cout << "CHOOSE YOUR OPTION...\n\n";
+
+        do
+        {
+        cout<<"\n\n\t\t a)PRODUCT PURCHASING SECTION\n\n\t\t b)EMPLOYEE MANAGEMENT\n\n\t\t c)SHIPPING\n\n\t\t d)STOCK MAINTENANCE\n\n\t\t e)FEEDBACK \n\n\t\t f)EXIT\n\n\n Enter the option :: ";
+        cin>>option;
+        switch (option)
+        {
+        case 'a':
+            {
+            o.details();
+            cout<<"\n\n1)PRODUCT PURCHASING SECTION\n";
+            do
+            {
+                cout<<"\n\n\t\t\t 1. PURCHASE PRODUCTS\n\n\t\t\t 2.DAILY SALE DATABASE\n\n\t\t\t 3.EXIT\n";
+                CH:
+                    cout<<"\n Enter your choice  :   ";
+                    cin>>ch1;
+                    try
+                    {
+                        if( (ch1 > 3) )
+                        {throw ch1;}
+                    }
+                    catch(int ch1)
+                    {
+                        cout<<"\n Please check and Enter valid choice....\n";
+                    goto CH;
+                    }
+
+            switch(ch1)
+                {
+                    case 1:
+
+                        cout<<"\n\t\t\tPURCHASE PRODUCTS \n";
+                        o.order_products();
+                        break;
+                    case 2:
+                        cout<<"\nDISPLAYING 'DAILY SALE' DETAILS FROM THE FILE............\n\n";
+                        o.disp();
+                        break;
+
+                    case 3:
+                        cout<<"\n\t\t\tEXIT\n";
+                        break;
+
+                }
+        }while(ch1!=3);
+            break;
+            }
+        case 'b':
+        {
+                do
+                {
+                cout<<"\n\n1)DISPLAY DETAILS \n2)ATTENDANCE REGISTRATION \n3)ATTENDANCE DATABASE \n4)SALARY CALCULATION \n5)SEARCHING BY ID \n6)SEARCHING BY DESIGNATION \n7)EXIT...\n\n";
+                ch:
+                    cout<<"\n Enter your choice :: ";
+                    cin>>choice;
+                            try
+                            {
+                                if( (choice > 7) )
+                                {throw choice;}
+                            }
+                            catch(int choice)
+                            {
+                                cout<<"\n Please check and Enter valid choice....\n";
+                            goto ch;
+                            }
+
+                switch(choice)
+                {
+
+                    case 1:
+                    {
+                        cout<<"\n1)DISPLAYING DETAILS FROM THE FILE....\n";
+                        //VIRTUAL FUNCTION / OVERRIDING
+                        IDEAL *OBJ;
+                        OBJ=&e;
+                        OBJ->disp();
+                        break;
+                    }
+                    case 2:
+                    {
+                        cout<<"\n2)ATTENDANCE REGISTRATION....\n";
+                        e.attendance();
+                        break;
+                    }
+                    case 3:
+                    {
+                        cout<<"\n2)ATTENDANCE DATABASE....\n";
+                        e.disp_attendance();
+                        break;
+                    }
+                    case 4:
+                    {
+                        cout<<"\n4)SALARY CALCULATION....\n";
+                        e.salary();
+                        cout<<"\n\n SALARY CALCULATION IS COMPLETED....\n";
+                        break;
+                    }
+                    case 5:
+                    {
+                        cout<<"\n5)SEARCHING BY ID....\n";
+                        int id;
+                        cout<<"\n Please enter the ID to be searched ::";
+                        cin>>id;
+                        e.Search(id);
+                        break;
+                    }
+                    case 6:
+                    {
+                        cout<<"\n6)SEARCHING BY DESIGNATION....\n";
+                        cout<<"\n\n  The Designation are as follows...\n  Please enter in correct format!\n\n1.MarketingAdmin\n2.SalesManager\n3.WarehouseManager\n4.DeliveryBoy";
+                        string designation;
+                        cout<<"\n\n Please enter the designation to be searched ::";
+                        cin>>designation;
+                        e.Search(designation);
+                        break;
+                    }
+                    }
+                    }while(choice!=7);
+        break;
+        }
+        case 'c':
+            {
+                    cout<<"\n3)SHIPPING\n";
+                    s.FUNCTION();
+                    break;
+            }
+        case 'd':
+            {
+            cout<<"\n4)STOCK MAINTENANCE\n";
+
+            int  i, n, choice;
+            int  pos, flag;
+            int  stock,id;
+            char ch, ch2,ch1;
+            char name[20];
+            char opt;
+
+
+            do
+            {
+                H:
+
+                cout << "Click 1....If you want to view product.\n";
+                cout << "Click 2....If you want to update the stock by using the product id.\n";
+                cout << "click 3....If you want to update the stock by using product name.\n";
+                cout << "Click 4....If you want to add the new stocks.\n";
+
+
+                cout << "Enter the choice : ";
+                cin >> choice;
+                //EXCEPTION HANDELING
+                try
+                {
+                    if( (choice > 4) )
+                    {
+                        throw choice;
+                    }
+                }
+                catch(int choice)
+                {
+                    cout<<"\n Please check and Enter valid choice....\n";
+                    goto H;
+                }
+
+
+                switch (choice)
+                {
+                    case 1:
+                    {
+                        for (i=0; i<70; i++)
+                        d.design();
+                        cout << endl;
+
+                        cout << "Product\t\tProduct\t\tProduct\t\tProduct\t\tProduct\n";
+                        cout << "  Name \t\t  Id   \t\t Qty.  \t\t Price \t\t stock \n";
+
+                        for (i=0; i<70; i++)
+                        d.design();
+                        cout << endl;
+
+                        ifstream rfile;
+                        rfile.open("product_details.tmp.txt",ios::out|ios::binary);
+                        rfile.seekg(0);
+
+                        while (rfile.read ((char*)&d,sizeof d))
+                        {
+                        d.putdata();
+                        }
+
+                        for (i=0; i<70; i++)
+                        d.design();
+                        cout << endl;
+
+                        rfile.close();
+                        break;
+                    }
+                    case 2:
+                    {
+                        ifstream rfile;
+                        rfile.open("product_details.tmp.txt",ios::out|ios::binary);
+                        rfile.seekg(0);
+
+                        for (i=0; i<70; i++)
+                            d.design();
+                            cout << endl;
+
+                        cout << "Product\t\tProduct\t\tProduct\t\tProduct\t\tProduct\n";
+                        cout << "  Name \t\t  Id   \t\t Qty.  \t\t Price \t\t stock \n";
+
+                        for (i=0; i<70; i++)
+                            d.design();
+                            cout << endl;
+
+                        while (rfile.read ((char*)&d, sizeof d))
+                        {
+                            d.putdata();
+                        }
+                        rfile.close();
+
+                        for (i=0; i<70; i++)
+                            d.design();
+                            cout << endl;
+
+
+                        fstream mfile ("product_details.tmp.txt",ios::out|ios::in|ios::binary);
+
+                        mfile.seekg(0);
+
+                        cout << "Enter the product id  : ";
+                        cin >> id;
+
+                        while (!mfile.eof())
+                        {
+                            pos = mfile.tellg();
+                            mfile.read ((char *)&d, sizeof d);
+                            flag = d.modify(id);
+                            if (flag == 1)
+                            {
+                                d.putdata();
+                                for (i=0; i<70; i++)
+                                    d.design();
+                                    cout << endl;
+
+                                cout << "Enter the new stock : \n";
+
+                                d.getdata();
+                                mfile.seekg(pos);
+                                mfile.write((char*)&d, sizeof (d));
+
+                                for (i=0; i<70; i++)
+                                    d.design();
+                                    cout << endl;
+                                d.putdata();
+                                cout << "\n..................The New Stock Details undated successfully...............\n\n";
+                                break;
+                            }
+                        }
+                        mfile.close();
+
+                        if (flag != 1)
+                        {
+                            cout << "The given Product id is wrong...please check the id....\n\n";
+                        }
+                        break;
+                    }
+
+                    case 3:
+                    {
+                        ifstream rfile;
+                        rfile.open("product_details.tmp.txt",ios::out|ios::binary);
+                        rfile.seekg(0);
+
+                        for (i=0; i<70; i++)
+                            d.design();
+                            cout << endl;
+
+                        cout << "Product\t\tProduct\t\tProduct\t\tProduct\t\tProduct\n";
+                        cout << "  Name \t\t  Id   \t\t Qty.  \t\t Price \t\t stock \n";
+
+                        for (i=0; i<70; i++)
+                            d.design();
+                            cout << endl;
+
+                        while (rfile.read ((char*)&d, sizeof d))
+                        {
+                            d.putdata();
+                        }
+                        rfile.close();
+
+                        for (i=0; i<70; i++)
+                            d.design();
+                            cout << endl;
+
+
+                        fstream mfile ("product_details.tmp.txt",ios::out|ios::in|ios::binary);
+
+                        mfile.seekg(0);
+
+                        cout << "Enter the product name : ";
+                        cin >> name;
+
+                        while (!mfile.eof())
+                        {
+                            pos = mfile.tellg();
+                            mfile.read ((char *)&d, sizeof d);
+                            flag = d.modify(name);
+                            if (flag == 1)
+                            {
+                                d.putdata();
+                                for (i=0; i<70; i++)
+                                    d.design();
+                                    cout << endl;
+
+                                cout << "Enter the new stock : \n";
+
+                                d.getdata();
+                                mfile.seekg(pos);
+                                mfile.write((char*)&d, sizeof (d));
+
+                                for (i=0; i<70; i++)
+                                d.design();
+                                cout << endl;
+                                d.putdata();
+                                cout << "\n..................The New Stock Details undated successfully...............\n\n";
+                                break;
+                            }
+                        }
+                        mfile.close();
+                        if (flag != 1)
+                        {
+                            cout << "The given Product id is wrong...please check the id....\n\n";
+                        }
+                        break;
+                    }
+                    case 4:
+                    {
+                        ofstream wfile;
+                        wfile.open ("product_details.tmp.txt",ios::in|ios::binary|ios::app);
+
+                        do
+                        {
+                            d.getdata();
+                            wfile.write((char*)&d, sizeof d);
+
+                            cout << "\nDo you want to add another record, If yes click 'y'  : ";
+                            cin >> ch1;
+                        } while (ch1 == 'y');
+
+                        wfile.close();
+                        cout << "new product updated successfully.......\n";
+                        break;
+                    }
+                }
+
+                cout << "\n\nDO YOU WANT TO CONTINUE. IF YES PRESS 'y' : ";
+                cin >> opt;
+            } while(opt == 'y');
+            break;
+        }
+        case 'e':
+            {
+                string NAME;
+                char c;
+                char str;
+                int a,i;
+                cout<<"\n  Do you want to give feedback in the form of ratings?('y'/'n') ? ::\n";
+                cin>>c;
+                if(c=='y')
+
+                {
+
+                    cout<<"\n\nPlease Enter your name  :: ";
+                    cin>>NAME;
+                    cout<<endl;
+                    cout<<"\n\n  1.RATE BY ALPHABETS \n\n  2.RATE BY NUMBERS\n\n";
+                    cin>>i;
+                    if (i==1)
+                    {
+                    cout<<"\nEnter your ratings from a to e:";
+                    cin>>str;
+                    cout<<endl;
+                    feedback<char>f2(str);
+                    f2.feedback_ratings();
+
+                    }
+                    if (i==2)
+                    {
+                    cout<<"\nEnter your ratings from 1 to 5:";
+                    cin>>a;
+                    cout<<endl;
+                    feedback<int>f3(a);
+                    f3.feedback_ratings();
+                    }
+                }
+                else
+                    cout<<"\n\n  THANKYOU....\n\n\n";
+
+                 break;
+        }
+        }
+    }while(option!='f');
+    return 0;
+}
+
